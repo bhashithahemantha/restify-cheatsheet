@@ -157,6 +157,8 @@ server.get('/hello/:name', function(req, res, next) {
 });
 
 // Trigger an HTTP error
+// The built-in restify errors are: RestError, BadDigestError, BadMethodError, InternalError, InvalidArgumentError, InvalidContentError, InvalidCredentialsError, InvalidHeaderError, InvalidVersionError, MissingParameterError,
+// NotAuthorizedError, RequestExpiredError, RequestThrottledError, ResourceNotFoundError, WrongAcceptError
 // The core thing to note about an HttpError is that it has a numeric code (statusCode) and a body. The statusCode will automatically set the HTTP response status code, and the body attribute by default will be the message.
 
 server.get('/hello/:name', function(req, res, next) {
@@ -167,5 +169,24 @@ server.get('/hello/:name', function(req, res, next) {
   return next(new restify.errors.ConflictError("I just don't like you"));
 });
 
+server.get('/hello/:name', function(req, res, next) {
+  return next(new restify.InvalidArgumentError("I just don't like you"));
+});
 
+// You can always add your own by subclassing restify.RestError like:
+
+var restify = require('restify');
+var util = require('util');
+
+function MyError(message) {
+  restify.RestError.call(this, {
+    restCode: 'MyError',
+    statusCode: 418,
+    message: message,
+    constructorOpt: MyError
+  });
+  this.name = 'MyError';
+};
+
+util.inherits(MyError, restify.RestError);
 
