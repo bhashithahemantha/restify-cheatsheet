@@ -4,6 +4,7 @@
 
 
 // 1. Creating a Server.
+// http://mcavage.me/node-restify/#Creating-a-Server
 
 
 var restify = require('restify');
@@ -18,3 +19,12 @@ var server = restify.createServer({
   version: null,         // A default version to set for all routes
   handleUpgrades: false  // Hook the upgrade event from the node HTTP server, pushing Connection: Upgrade requests through the regular request handling chain; defaults to false
 });
+
+
+// 2. Use Common Handlers.
+// Note that restify runs handlers in the order they are registered on a server.
+// http://mcavage.me/node-restify/#Common-handlers:-server.use()
+
+
+server.use(restify.fullResponse());
+server.use(restify.bodyParser());
