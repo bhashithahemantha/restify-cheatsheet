@@ -26,6 +26,14 @@ server.listen(3000, function () {
   console.log('%s listening at %s', server.name, server.url);
 });
 
+// You can change what headers restify sends by default by setting the top-level property defaultResponseHeaders. This should be a function that takes one argument data, which is the already serialized response body.
+// data can be either a String or Buffer (or null). The this object will be the response itself.
+restify.defaultResponseHeaders = function(data) {
+  this.header('Server', 'helloworld');
+};
+
+restify.defaultResponseHeaders = false; // disable altogether
+
 
 // 1.2. Server API Event Emitters.
 // http://mcavage.me/node-restify/#Server-API
