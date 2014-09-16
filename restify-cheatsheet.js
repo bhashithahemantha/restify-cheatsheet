@@ -10,7 +10,7 @@
 var restify = require('restify');
 
 // A restify server has the following properties on it: name, version, log, acceptable, url.
-// and the following methods: address(), listen(port, [host], [callback]), close(), pre(), use().
+// And the following methods: address(), listen(port, [host], [callback]), close(), pre(), use().
 var server = restify.createServer({
   certificate: null,     // If you want to create an HTTPS server, pass in the PEM-encoded certificate and key
   key: null,             // If you want to create an HTTPS server, pass in the PEM-encoded certificate and key
