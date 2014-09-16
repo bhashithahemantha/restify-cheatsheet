@@ -42,11 +42,23 @@ server.on('after', function (request, response, route, error) {});       // Emit
 server.on('uncaughtException', function (request, response, route, error) {});  // Emitted when some handler throws an uncaughtException somewhere in the chain. The default behavior is to just call res.send(error), and let the built-ins in restify handle transforming, but you can override to whatever you want here.
 
 
-// 2. Use Common Handlers.
-// Note that restify runs handlers in the order they are registered on a server.
+// 2. Common Handlers and Bundle Plugins.
+// A restify server has a use() method that takes handlers of the form function (req, res, next). Note that restify runs handlers in the order they are registered on a server, so if you want some common handlers to run before any of your routes, issue calls to use() before defining routes. Note that in all calls to use() and the routes below, you can pass in any combination of direct functions (function(res, res, next)) and arrays of functions ([function(req, res, next)]).
 // http://mcavage.me/node-restify/#Common-handlers:-server.use()
+// Also, restify ships with several handlers you can use.
+// http://mcavage.me/node-restify/#Bundled-Plugins
 
 
+server.use(restify.acceptParser(server.acceptable));  // Parses out the Accept header, and ensures that the server can respond to what the client asked for. You almost always want to just pass in server.acceptable here, as that's an array of content types the server knows how to respond to (with the formatters you've registered). If the request is for a non-handled type, this plugin will return an error of 406.
+server.use(restify.authorizationParser());  // Parses out the Authorization header as best restify can. Currently only HTTP Basic Auth and HTTP Signature schemes are supported. When this is used, req.authorization will be set to something like:
+server.use(restify.CORS());                 // Supports tacking CORS headers into actual requests (as defined by the spec). Note that preflight requests are automatically handled by the router, and you can override the default behavior on a per-URL basis with server.opts(:url, ...).
+server.use(restify.dateParser());           // Parses out the HTTP Date header (if present) and checks for clock skew (default allowed clock skew is 300s, like Kerberos). You can pass in a number, which is interpreted in seconds, to allow for clock skew.
+server.use(restify.queryParser());          // Parses the HTTP query string (i.e., /foo?id=bar&name=mark). If you use this, the parsed content will always be available in req.query, additionally params are merged into req.params. You can disable by passing in mapParams: false in the options object.
+server.use(restify.jsonp());                //
+server.use(restify.gzipResponse());
+server.use(restify.bodyParser());
+server.use(restify.throttle());
+server.use(restify.conditionalRequest());
 server.use(restify.fullResponse());  // sets up all of the default headers for the system
 server.use(restify.bodyParser());    // remaps the body content of a request to the req.params variable, allowing both GET and POST/PUT routes to use the same interface
 
