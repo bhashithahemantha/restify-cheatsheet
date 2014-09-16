@@ -42,6 +42,29 @@ server.on('after', function (request, response, route, error) {});       // Emit
 server.on('uncaughtException', function (request, response, route, error) {});  // Emitted when some handler throws an uncaughtException somewhere in the chain. The default behavior is to just call res.send(error), and let the built-ins in restify handle transforming, but you can override to whatever you want here.
 
 
+// 1.3. Request API.
+// Wraps all of the node http.IncomingMessage APIs, events and properties, plus the following.
+// http://mcavage.me/node-restify/#Request-API
+
+
+req.header(key, [defaultValue]);  // Get the case-insensitive request header key, and optionally provide a default value (express-compliant).
+req.accepts(type);                // Check if the Accept header is present, and includes the given type.
+req.is(type);                     // Check if the incoming request contains the Content-Type header field, and it contains the give mime type.
+req.isSecure();                   // Check if the incoming request is encrypted.
+req.isChunked();                  // Check if the incoming request is chunked.
+req.isKeepAlive();                // Check if the incoming request is kept alive.
+req.log;                          // Note that you can piggyback on the restify logging framework, by just using req.log
+req.getLogger(component);         // Shorthand to grab a new bunyan instance that is a child component of the one restify has.
+req.time();                       // The time when this request arrived (ms since epoch).
+
+req.contentLength;  // Short hand for the header content-length.
+req.contentType;    // Short hand for the header content-type.
+req.href;           // url.parse(req.url) href
+req.log;            // Bunyan logger you can piggyback on
+req.id;             // A unique request id (x-request-id)
+req.path;           // Cleaned up URL path
+
+
 // 2. Common Handlers and Bundle Plugins.
 // A restify server has a use() method that takes handlers of the form function (req, res, next). Note that restify runs handlers in the order they are registered on a server, so if you want some common handlers to run before any of your routes, issue calls to use() before defining routes. Note that in all calls to use() and the routes below, you can pass in any combination of direct functions (function(res, res, next)) and arrays of functions ([function(req, res, next)]).
 // http://mcavage.me/node-restify/#Common-handlers:-server.use()
