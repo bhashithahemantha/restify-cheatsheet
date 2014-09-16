@@ -93,3 +93,70 @@ server.get({path: PATH, version: '2.0.0'}, sendV2);
 
 // You can default the versions on routes by passing in a version field at server creation time. Lastly, you can support multiple versions in the API by using an array:
 server.get({path: PATH, version: ['2.0.0', '2.1.0']}, sendV2);
+
+
+// 4. Content Negotiation.
+// http://mcavage.me/node-restify/#Content-Negotiation
+
+
+// If you're using res.send() restify will automatically select the content-type to respond with, by finding the first registered formatter defined. 
+var server = restify.createServer({
+  formatters: {
+    'application/foo': function formatFoo(req, res, body) {
+      if (body instanceof Error)
+        return body.stack;
+
+      if (Buffer.isBuffer(body))
+        return body.toString('base64');
+
+      return util.inspect(body);
+    }
+  }
+});
+
+
+// Note that if a content-type can't be negotiated, the default is application/octet-stream. Of course, you can always explicitly set the content-type.
+res.setHeader('content-type', 'application/foo');
+res.send({hello: 'world'});
+
+// You don't have to use any of this magic, as a restify response object has all the "raw" methods of a node ServerResponse on it as well.
+var body = 'hello world';
+res.writeHead(200, {
+  'Content-Length': Buffer.byteLength(body),
+  'Content-Type': 'text/plain'
+});
+res.write(body);
+res.end();
+
+
+// 5. Error Handling.
+// http://mcavage.me/node-restify/#Error-handling
+
+
+// If you invoke res.send() with an error that has a statusCode attribute, that will be used, otherwise a default of 500 will be used
+// You can also shorthand this in a route by doing:
+
+server.get('/hello/:name', function(req, res, next) {
+  return database.get(req.params.name, function(err, user) {
+    if (err)
+      return next(err);
+
+    res.send(user);
+    return next();
+  });
+});
+
+// Alternatively, restify 2.1 supports a next.ifError API
+
+server.get('/hello/:name', function(req, res, next) {
+  return database.get(req.params.name, function(err, user) {
+    next.ifError(err);
+    res.send(user);
+    next();
+  });
+});
+
+
+
+
+
