@@ -156,7 +156,16 @@ server.get('/hello/:name', function(req, res, next) {
   });
 });
 
+// Trigger an HTTP error
+// The core thing to note about an HttpError is that it has a numeric code (statusCode) and a body. The statusCode will automatically set the HTTP response status code, and the body attribute by default will be the message.
 
+server.get('/hello/:name', function(req, res, next) {
+  return next(new restify.ConflictError("I just don't like you"));
+});
+
+server.get('/hello/:name', function(req, res, next) {
+  return next(new restify.errors.ConflictError("I just don't like you"));
+});
 
 
 
