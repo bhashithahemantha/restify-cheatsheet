@@ -65,6 +65,25 @@ req.id;             // A unique request id (x-request-id)
 req.path;           // Cleaned up URL path
 
 
+// 1.4. Response API.
+// Wraps all of the node ServerResponse APIs, events and properties, plus the following.
+// http://mcavage.me/node-restify/#Response-API
+
+
+res.header(key, value);        // Get or set the response header key.
+res.charSet(type);             // Appends the provided character set to the response's Content-Type.
+res.cache([type], [options]);  // Sets the cache-control header. type defaults to _public_, and options currently only takes maxAge.
+res.status(code);              // Sets the response statusCode.
+res.send([status], body);      // You can use send() to wrap up all the usual writeHead(), write(), end() calls on the HTTP API of node. You can pass send either a code and body, or just a body.  body can be an Object, a Buffer, or an Error. When you call send(), restify figures out how to format the response (see content-negotiation, above), and does that.
+res.json([status], body);      // Short-hand for: res.contentType = 'json'; res.send({hello: 'world'});
+
+res.code;           // HTTP status code.
+res.contentLength;  // Short hand for the header content-length.
+res.contentType;    // Short hand for the header content-type.
+res.headers;        // Response headers.
+res.id;             // A unique request id (x-request-id).
+
+
 // 2. Common Handlers and Bundle Plugins.
 // A restify server has a use() method that takes handlers of the form function (req, res, next). Note that restify runs handlers in the order they are registered on a server, so if you want some common handlers to run before any of your routes, issue calls to use() before defining routes. Note that in all calls to use() and the routes below, you can pass in any combination of direct functions (function(res, res, next)) and arrays of functions ([function(req, res, next)]).
 // http://mcavage.me/node-restify/#Common-handlers:-server.use()
