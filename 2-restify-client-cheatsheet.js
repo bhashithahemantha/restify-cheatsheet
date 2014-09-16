@@ -28,4 +28,14 @@ client.del(path, function(err, req, res) {});                // del doesn't take
 // options: accept, connectTimeout, requestTimeout, dtrace, gzip, headers, log, retry, signRequest, url, userAgent, version.
 var client = restify.createStringClient(options);
 
+client.get(path, function(err, req, res, data) {});           // Performs an HTTP get; if no payload was returned, data defaults to '' for you (so you don't get a bunch of null pointer errors).
+client.head(path, function(err, req, res) {});                // Just like get, but without data.
+client.post(path, object, function(err, req, res, data) {});  // Takes a complete object to serialize and send to the server.
+client.put(path, object, function(err, req, res, data) {});   // Just like post.
+client.del(path, function(err, req, res) {});                 // del doesn't take content, since you know, it shouldn't.
+
+
+// 3. HttpClient.
+// http://mcavage.me/node-restify/#HttpClient
+
 
