@@ -190,3 +190,36 @@ function MyError(message) {
 
 util.inherits(MyError, restify.RestError);
 
+
+// 6. Socket.io.
+// To use socket.io with restify, just treat your restify server as if it were a "raw" node server.
+// http://mcavage.me/node-restify/#Socket.IO
+
+
+var server = restify.createServer();
+var io = socketio.listen(server);
+
+server.get('/', function indexHTML(req, res, next) {
+  fs.readFile(__dirname + '/index.html', function (err, data) {
+    if (err) {
+      next(err);
+    return;
+  }
+
+  res.setHeader('Content-Type', 'text/html');
+  res.writeHead(200);
+  res.end(data);
+  next();
+});
+
+
+io.sockets.on('connection', function (socket) {
+  socket.emit('news', { hello: 'world' });
+  socket.on('my other event', function (data) {
+    console.log(data);
+  });
+});
+
+server.listen(8080, function () {
+  console.log('socket.io server listening at %s', server.url);
+});
