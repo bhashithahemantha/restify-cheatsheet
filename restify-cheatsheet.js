@@ -16,7 +16,7 @@ var server = restify.createServer({
   log: null,             // You can optionally pass in a bunyan instance; not required
   name: 'node-api',      // By default, this will be set in the Server response header, default is restify
   spdy: null,            // Any options accepted by node-spdy
-  version: null,         // A default version to set for all routes
+  version: '1.1.3',      // A default version to set for all routes
   handleUpgrades: false  // Hook the upgrade event from the node HTTP server, pushing Connection: Upgrade requests through the regular request handling chain; defaults to false
 });
 
@@ -85,3 +85,11 @@ server.get(
     return next();
   }
 );
+
+// Most REST APIs tend to need versioning, and restify ships with support for semver versioning in an Accept-Version header, the same way you specify NPM version dependencies
+var PATH = '/hello/:name';
+server.get({path: PATH, version: '1.1.3'}, sendV1);
+server.get({path: PATH, version: '2.0.0'}, sendV2);
+
+// You can default the versions on routes by passing in a version field at server creation time. Lastly, you can support multiple versions in the API by using an array:
+server.get({path: PATH, version: ['2.0.0', '2.1.0']}, sendV2);
