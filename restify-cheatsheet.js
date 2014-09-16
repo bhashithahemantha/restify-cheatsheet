@@ -3,7 +3,7 @@
 // Install restify with npm install restify
 
 
-// 1. Creating a Server.
+// 1.1. Creating a Server.
 // http://mcavage.me/node-restify/#Creating-a-Server
 
 
@@ -23,6 +23,24 @@ var server = restify.createServer({
 server.listen(3000, function () {
   console.log('%s listening at %s', server.name, server.url);
 });
+
+
+// 1.2. Server API.
+// http://mcavage.me/node-restify/#Server-API
+
+
+// Restify servers emit all the events from the node http.Server and has several other events you want to listen on.
+// http://nodejs.org/docs/latest/api/http.html#http_class_http_server
+
+server.on('NotFound', function (request, response, cb) {});              // When a client request is sent for a URL that does not exist, restify will emit this event. Note that restify checks for listeners on this event, and if there are none, responds with a default 404 handler. It is expected that if you listen for this event, you respond to the client.
+server.on('MethodNotAllowed', function (request, response, cb) {});      // When a client request is sent for a URL that does exist, but you have not registered a route for that HTTP verb, restify will emit this event. Note that restify checks for listeners on this event, and if there are none, responds with a default 405 handler. It is expected that if you listen for this event, you respond to the client.
+server.on('VersionNotAllowed', function (request, response, cb) {});     // When a client request is sent for a route that exists, but does not match the version(s) on those routes, restify will emit this event. Note that restify checks for listeners on this event, and if there are none, responds with a default 400 handler. It is expected that if you listen for this event, you respond to the client.
+server.on('UnsupportedMediaType', function (request, response, cb) {});  // When a client request is sent for a route that exist, but has a content-type mismatch, restify will emit this event. Note that restify checks for listeners on this event, and if there are none, responds with a default 415 handler. It is expected that if you listen for this event, you respond to the client.
+server.on('after', function (request, response, route, error) {});       // Emitted after a route has finished all the handlers you registered. You can use this to write audit logs, etc. The route parameter will be the Route object that ran.
+server.on('uncaughtException', function (request, response, route, error) {});  // Emitted when some handler throws an uncaughtException somewhere in the chain. The default behavior is to just call res.send(error), and let the built-ins in restify handle transforming, but you can override to whatever you want here.
+
+
+
 
 
 // 2. Use Common Handlers.
@@ -113,7 +131,6 @@ var server = restify.createServer({
     }
   }
 });
-
 
 // Note that if a content-type can't be negotiated, the default is application/octet-stream. Of course, you can always explicitly set the content-type.
 res.setHeader('content-type', 'application/foo');
