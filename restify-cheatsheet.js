@@ -20,6 +20,10 @@ var server = restify.createServer({
   handleUpgrades: false  // Hook the upgrade event from the node HTTP server, pushing Connection: Upgrade requests through the regular request handling chain; defaults to false
 });
 
+server.listen(3000, function () {
+  console.log('%s listening at %s', server.name, server.url);
+});
+
 
 // 2. Use Common Handlers.
 // Note that restify runs handlers in the order they are registered on a server.
