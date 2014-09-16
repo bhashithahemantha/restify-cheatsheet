@@ -72,3 +72,16 @@ server.get({
   res.send(200);
   next();
 });
+
+// Routes can also accept more than one handler function.
+server.get(
+  '/foo/:id',
+  function(req, res, next) {
+    console.log('Authenticate');
+    return next();
+  },
+  function(req, res, next) {
+    res.send(200);
+    return next();
+  }
+);
