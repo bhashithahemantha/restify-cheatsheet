@@ -1,5 +1,5 @@
-// Restify CheatSheet.
-// More about the API: http://mcavage.me/node-restify/
+// Restify Server CheatSheet.
+// More about the API: http://mcavage.me/node-restify/#server-api
 // Install restify with npm install restify
 
 
