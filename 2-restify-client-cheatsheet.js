@@ -33,9 +33,3 @@ client.head(path, function(err, req, res) {});                // Just like get, 
 client.post(path, object, function(err, req, res, data) {});  // Takes a complete object to serialize and send to the server.
 client.put(path, object, function(err, req, res, data) {});   // Just like post.
 client.del(path, function(err, req, res) {});                 // del doesn't take content, since you know, it shouldn't.
-
-
-// 3. HttpClient.
-// http://mcavage.me/node-restify/#HttpClient
-
-
