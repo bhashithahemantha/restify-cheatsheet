@@ -46,7 +46,7 @@ function send(req, res, next) {
  
 function rm(req, res, next) {
   res.send(204);
-  return next();
+  return next('foo2');
 }
  
 server.post('/hello', send);
@@ -61,4 +61,14 @@ server.get(/^\/([a-zA-Z0-9_\.~-]+)\/(.*)/, function(req, res, next) {
   console.log(req.params[1]);
   res.send(200);
   return next();
+});
+
+// You can pass in a string name to next(), and restify will lookup that route, and assuming it exists will run the chain from where you left off.
+server.get({
+  name: 'foo2',
+  path: '/foo/:id'
+}, function (req, res, next) {
+  assert.equal(count, 1);
+  res.send(200);
+  next();
 });
