@@ -27,7 +27,7 @@ server.listen(3000, function () {
 });
 
 
-// 1.2. Server API.
+// 1.2. Server API Event Emitters.
 // http://mcavage.me/node-restify/#Server-API
 
 
@@ -40,9 +40,6 @@ server.on('VersionNotAllowed', function (request, response, cb) {});     // When
 server.on('UnsupportedMediaType', function (request, response, cb) {});  // When a client request is sent for a route that exist, but has a content-type mismatch, restify will emit this event. Note that restify checks for listeners on this event, and if there are none, responds with a default 415 handler. It is expected that if you listen for this event, you respond to the client.
 server.on('after', function (request, response, route, error) {});       // Emitted after a route has finished all the handlers you registered. You can use this to write audit logs, etc. The route parameter will be the Route object that ran.
 server.on('uncaughtException', function (request, response, route, error) {});  // Emitted when some handler throws an uncaughtException somewhere in the chain. The default behavior is to just call res.send(error), and let the built-ins in restify handle transforming, but you can override to whatever you want here.
-
-
-
 
 
 // 2. Use Common Handlers.
