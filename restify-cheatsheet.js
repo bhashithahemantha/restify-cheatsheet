@@ -37,7 +37,7 @@ server.use(restify.bodyParser());    // remaps the body content of a request to 
 // 3. Routing.
 // http://mcavage.me/node-restify/#Routing
 
-
+// You are responsible for calling next() in order to run the next handler in the chain.
 function send(req, res, next) {
   res.send('hello ' + req.params.name);
   return next();
@@ -53,4 +53,11 @@ server.put('/hello', send);
 server.get('/hello/:name', send);
 server.head('/hello/:name', send);
 server.del('hello/:name', rm);
- 
+
+// You can also pass in a RegExp object and access the capture group with req.params (which will not be interpreted in any way).
+server.get(/^\/([a-zA-Z0-9_\.~-]+)\/(.*)/, function(req, res, next) {
+  console.log(req.params[0]);
+  console.log(req.params[1]);
+  res.send(200);
+  return next();
+});
