@@ -92,9 +92,19 @@ res.headers;        // Response headers.
 res.id;             // A unique request id (x-request-id).
 
 
-// 2. Common Handlers and Bundle Plugins.
+// 2.1. Common Handlers.
 // A restify server has a use() method that takes handlers of the form function (req, res, next). Note that restify runs handlers in the order they are registered on a server, so if you want some common handlers to run before any of your routes, issue calls to use() before defining routes. Note that in all calls to use() and the routes below, you can pass in any combination of direct functions (function(res, res, next)) and arrays of functions ([function(req, res, next)]).
 // http://mcavage.me/node-restify/#Common-handlers:-server.use()
+
+
+server.use(function slowHandler(req, res, next) {
+  setTimeout(function() {
+    return next();
+  }, 250);
+});
+
+
+// 2.2. Bundle Plugins.
 // Also, restify ships with several handlers you can use.
 // http://mcavage.me/node-restify/#Bundled-Plugins
 
