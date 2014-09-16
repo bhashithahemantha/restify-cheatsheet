@@ -30,5 +30,27 @@ server.listen(3000, function () {
 // http://mcavage.me/node-restify/#Common-handlers:-server.use()
 
 
-server.use(restify.fullResponse());
-server.use(restify.bodyParser());
+server.use(restify.fullResponse());  // sets up all of the default headers for the system
+server.use(restify.bodyParser());    // remaps the body content of a request to the req.params variable, allowing both GET and POST/PUT routes to use the same interface
+
+
+// 3. Routing.
+// http://mcavage.me/node-restify/#Routing
+
+
+function send(req, res, next) {
+  res.send('hello ' + req.params.name);
+  return next();
+}
+ 
+function rm(req, res, next) {
+  res.send(204);
+  return next();
+}
+ 
+server.post('/hello', send);
+server.put('/hello', send);
+server.get('/hello/:name', send);
+server.head('/hello/:name', send);
+server.del('hello/:name', rm);
+ 
