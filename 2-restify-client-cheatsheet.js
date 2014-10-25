@@ -12,7 +12,7 @@ var restify = require('restify');
 
 
 // options: accept, connectTimeout, requestTimeout, dtrace, gzip, headers, log, retry, signRequest, url, userAgent, version.
-var client = restify.createJsonClient(options);  // 
+var client = restify.createJsonClient(options);
 
 client.get(path, function(err, req, res, obj) {});           // Performs an HTTP get; if no payload was returned, obj defaults to {} for you (so you don't get a bunch of null pointer errors).
 client.head(path, function(err, req, res) {});               // Just like get, but without obj.
